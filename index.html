@@ -1,1 +1,241 @@
 
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Awais Writes - Urdu Poetry</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #10101d;
+  color: white;
+}
+
+header {
+  text-align: center;
+  padding: 30px 15px;
+  background: linear-gradient(135deg,#5b21b6,#db2777);
+  border-radius: 0 0 30px 30px;
+}
+
+header h1 {
+  font-size: 32px;
+  margin: 5px;
+}
+
+header p {
+  font-size: 15px;
+}
+
+.container {
+  max-width: 650px;
+  margin: auto;
+  padding: 18px;
+}
+
+.search {
+  width: 100%;
+  padding: 15px;
+  border: 2px solid #a855f7;
+  border-radius: 15px;
+  background: #202033;
+  color: white;
+  font-size: 16px;
+  margin-bottom: 18px;
+  outline: none;
+}
+
+.categories {
+  display: flex;
+  gap: 9px;
+  overflow-x: auto;
+  padding-bottom: 15px;
+}
+
+.categories button {
+  border: none;
+  background: #292941;
+  color: white;
+  padding: 12px 17px;
+  border-radius: 20px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.categories button.active {
+  background: #c026d3;
+}
+
+.poetry {
+  background: #202033;
+  border: 1px solid #393953;
+  border-radius: 18px;
+  padding: 20px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.poetry p {
+  font-size: 21px;
+  line-height: 2;
+  color: #f5d0fe;
+}
+
+.poetry button {
+  background: linear-gradient(135deg,#9333ea,#db2777);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 11px 25px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+footer {
+  text-align: center;
+  padding: 25px;
+  color: #c4b5fd;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>❤️ Awais Writes ❤️</h1>
+<p>اردو شاعری کی خوبصورت دنیا</p>
+</header>
+
+<div class="container">
+
+<input
+class="search"
+type="text"
+id="search"
+placeholder="🔍 اپنی پسند کی شاعری تلاش کریں..."
+oninput="showPoetry()"
+>
+
+<div class="categories">
+<button class="active" onclick="filterPoetry('سب',this)">سب شاعری</button>
+<button onclick="filterPoetry('اداس',this)">🥀 اداس</button>
+<button onclick="filterPoetry('محبت',this)">❤️ محبت</button>
+<button onclick="filterPoetry('اسلامی',this)">🕌 اسلامی</button>
+<button onclick="filterPoetry('دوستی',this)">🌹 دوستی</button>
+</div>
+
+<div id="poetryList"></div>
+
+</div>
+
+<footer>
+<p>✨ Awais Writes ✨</p>
+<p>آپ کی محبت ہمارا سرمایہ ہے ❤️</p>
+</footer>
+
+<script>
+
+const poems = [
+
+{cat:"اداس",text:"ہم نے خاموش رہ کر بھی دیکھ لیا\nلوگ لفظوں سے نہیں، مطلب سے سمجھتے ہیں 🥀"},
+
+{cat:"اداس",text:"کچھ خواب ادھورے ہی اچھے ہوتے ہیں\nمکمل ہو جائیں تو اپنا نہیں رہتے 💔"},
+
+{cat:"اداس",text:"تنہائی کا بھی اپنا ایک مقام ہے\nیہاں کوئی جھوٹا وعدہ نہیں کرتا 🥀"},
+
+{cat:"اداس",text:"وقت نے سب کچھ سکھا دیا ہمیں\nبس کسی کو بھولنا نہیں سکھایا 💔"},
+
+{cat:"محبت",text:"تمہاری مسکراہٹ میری پہچان ہے\nتمہاری خوشی ہی میری جان ہے ❤️"},
+
+{cat:"محبت",text:"دل میں تم ہو اور خیالوں میں بھی تم\nمیری ہر دعا کا سوال ہو تم 💕"},
+
+{cat:"محبت",text:"محبت لفظوں کی محتاج نہیں ہوتی\nیہ تو خاموش نگاہوں سے بھی ہوتی ہے ❤️"},
+
+{cat:"دوستی",text:"دوستی وہ نہیں جو وقت کے ساتھ بدل جائے\nدوستی وہ ہے جو ہر حال میں ساتھ نبھائے 🌹"},
+
+{cat:"دوستی",text:"سچے دوست قسمت والوں کو ملتے ہیں\nجو مشکل وقت میں بھی ساتھ چلتے ہیں 🤝"},
+
+{cat:"اسلامی",text:"اللہ پر یقین رکھو، راستے بنتے جائیں گے\nجو تمہارے حق میں بہتر ہے، وہ ملتا جائے گا 🕌"},
+
+{cat:"اسلامی",text:"سجدوں میں مانگی ہوئی دعائیں کبھی ضائع نہیں ہوتیں\nاللہ کی رحمت سے امید کبھی ختم نہیں ہوتی 🤲"},
+
+{cat:"اسلامی",text:"صبر کرو، اللہ بہترین فیصلہ کرنے والا ہے\nہر مشکل کے بعد آسانی آنے والی ہے ❤️"}
+
+];
+
+let currentCategory = "سب";
+
+function showPoetry() {
+
+const list = document.getElementById("poetryList");
+const search = document.getElementById("search").value.toLowerCase();
+
+list.innerHTML = "";
+
+const filtered = poems.filter(poem => {
+return (currentCategory === "سب" || poem.cat === currentCategory)
+&& poem.text.toLowerCase().includes(search);
+});
+
+if(filtered.length === 0) {
+list.innerHTML = "<p style='text-align:center'>کوئی شاعری نہیں ملی 🥀</p>";
+return;
+}
+
+filtered.forEach(poem => {
+
+const card = document.createElement("div");
+card.className = "poetry";
+
+const p = document.createElement("p");
+p.textContent = poem.text;
+
+const btn = document.createElement("button");
+btn.textContent = "📋 شاعری کاپی کریں";
+
+btn.onclick = async () => {
+try {
+await navigator.clipboard.writeText(poem.text);
+btn.textContent = "✅ کاپی ہوگئی";
+} catch(e) {
+const area = document.createElement("textarea");
+area.value = poem.text;
+document.body.appendChild(area);
+area.select();
+document.execCommand("copy");
+area.remove();
+btn.textContent = "✅ کاپی ہوگئی";
+}
+setTimeout(() => btn.textContent = "📋 شاعری کاپی کریں",2000);
+};
+
+card.appendChild(p);
+card.appendChild(btn);
+list.appendChild(card);
+
+});
+
+}
+
+function filterPoetry(category,button) {
+currentCategory = category;
+
+document.querySelectorAll(".categories button")
+.forEach(btn => btn.classList.remove("active"));
+
+button.classList.add("active");
+showPoetry();
+}
+
+showPoetry();
+
+</script>
+</body>
+</html>
